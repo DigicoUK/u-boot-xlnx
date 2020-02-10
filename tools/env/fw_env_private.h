@@ -77,14 +77,18 @@
     "setenvmount=envmount=mmc; " \
         "envdev=0; " \
         "envpartid=1; " \
+	"doUpdate=0; " \
 	"setenv bootargs root=/dev/mmcblk0p2 rw rootwait earlyprintk ethaddr=${ethaddr}; " \
         "if test ${sw_reset} -eq 1; then " \
-            "echo Software update process started;" \
-            "setenv kernel_img failsafe.ub; " \
-            "setenv bootargs root=/dev/mmcblk0p3 rw rootwait earlyprintk; " \
-            "setenv sw_reset 0; saveenv;" \
+  	    "doUpdate=1;" \
         "fi;" \
         "if gpio input ${resetmio} ; then " \
+	    "doUpdate=1;" \
+	"fi;" \
+        "if test ${modeboot} = \"sdboot\"; then " \
+	    "doUpdate=1;" \
+        "fi; " \
+	"if test ${doUpdate} -eq 1' then " \
 	    "mw 42010004 C0000fff; mw 42010008 C0000fff; mw 4201000C C0000fff; " \
             "setenv kernel_img failsafe.ub; " \
             "setenv bootargs ; " \
@@ -97,10 +101,7 @@
                 "envmount=mmc; envdev=0; envpartid=0; " \
                 "setenv bootargs root=/dev/mmcblk0p3 rw rootwait earlyprintk; " \
             "fi;" \
-        "fi;" \
-        "if test ${modeboot} = \"sdboot\"; then " \
-            "setenv kernel_img failsafe.ub; " \
-            "setenv bootargs root=/dev/mmcblk0p3 rw rootwait earlyprintk; " \
+            "setenv sw_reset 0; saveenv;" \
         "fi; \0" \
     "searchenvusb=if test ${kernel_img} = \"failsafe.ub\"; then " \
         "failsafefound=0; " \
