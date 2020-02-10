@@ -13,6 +13,8 @@
  */
 #define FW_ENV_API_VERSION	1
 
+#define CONFIG_FILE "/etc/fw_env.config"
+
 struct env_opts {
 #ifdef CONFIG_FILE
 	char *config_file;
